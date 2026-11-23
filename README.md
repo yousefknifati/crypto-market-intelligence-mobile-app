@@ -2,8 +2,8 @@
 
 A production-minded cryptocurrency dashboard built for the NMO Business Senior Frontend Developer challenge. It combines request-time market rankings, revalidated asset detail pages, a persistent Redux watchlist, and isolated Binance WebSocket streams in a responsive Next.js application.
 
-- Live application: https://crypto-market-inelligence.vercel.app
-- Source repository: https://github.com/yousefknifati/crypto-market-inelligence
+- Live application: https://crypto-market-intelligence-mobile-a.vercel.app
+- Source repository: https://github.com/yousefknifati/crypto-market-intelligence-mobile-app
 
 ## Product features
 
@@ -74,8 +74,8 @@ The interface labels unavailable fields instead of fabricating market values. Un
 Requirements: Node.js 20 or newer and npm.
 
 ```bash
-git clone https://github.com/yousefknifati/crypto-market-inelligence.git
-cd crypto-market-inelligence
+git clone https://github.com/yousefknifati/crypto-market-intelligence-mobile-app.git
+cd crypto-market-intelligence-mobile-app
 npm install
 ```
 

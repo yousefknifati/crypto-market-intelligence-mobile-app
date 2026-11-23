@@ -26,7 +26,7 @@ export async function generateMarketDetailMetadata(
   return {
     title,
     description,
-    alternates: { canonical: canonicalUrl },
+    alternates: { canonical: canonicalUrl.toString() },
     openGraph: {
       title,
       description,

@@ -9,7 +9,7 @@ const homeDescription =
 export const homeMetadata: Metadata = {
   title: homeTitle,
   description: homeDescription,
-  alternates: { canonical: new URL("/", getSiteUrl()) },
+  alternates: { canonical: getSiteUrl().toString() },
   openGraph: {
     title: homeTitle,
     description: homeDescription,
