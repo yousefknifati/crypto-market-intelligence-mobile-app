@@ -94,6 +94,11 @@ SITE_URL=http://localhost:3000
 
 # Optional public override; this public endpoint is also the default.
 NEXT_PUBLIC_BINANCE_WS_URL=wss://data-stream.binance.vision
+
+# Android app (Trusted Web Activity) Digital Asset Links. Both are public
+# values, not secrets. Fingerprints are comma-separated SHA-256 values.
+ANDROID_PACKAGE_NAME=com.example.cryptomarketintel
+ANDROID_SHA256_CERT_FINGERPRINTS=AA:BB:...,CC:DD:...
 ```
 
 Run and verify:
@@ -155,6 +160,26 @@ Route content uses a short fade/vertical reveal. Summary and fundamental cards u
 5. Verify `/`, `/watchlist`, `/market/bitcoin`, an invalid asset URL, `/robots.txt`, `/sitemap.xml`, and live WebSocket status.
 
 The deployment must remain publicly reachable without Vercel authentication.
+
+## Android app (Google Play via PWABuilder)
+
+The Android app is a [Trusted Web Activity](https://developer.chrome.com/docs/android/trusted-web-activity) generated with [PWABuilder](https://www.pwabuilder.com). It opens the deployed site full-screen in Chrome, so SSR, ISR, route handlers, the Binance WebSocket, and the localStorage watchlist work unchanged, and web deploys reach app users without a Play Store release. A static-export wrapper (for example Capacitor with bundled assets) was rejected because it would remove the request-time SSR, ISR, and route handler this app depends on.
+
+PWA pieces in this repository:
+
+- `app/manifest.ts`: web app manifest (name, colors, standalone display, any/maskable icons, shortcuts).
+- `public/icons/`: 192 px and 512 px regular and maskable PNG icons; `app/apple-icon.png` for iOS.
+- `public/sw.js` + `components/pwa/ServiceWorkerRegistrar.tsx`: a production-only service worker that serves `/offline` when a navigation fails. Market data is deliberately never cached, so offline users never see stale prices presented as live.
+- `app/.well-known/assetlinks.json/route.ts`: Digital Asset Links built from `ANDROID_PACKAGE_NAME` and `ANDROID_SHA256_CERT_FINGERPRINTS`. It returns `[]` until both are set.
+
+Release steps:
+
+1. Deploy the site and confirm `/manifest.webmanifest` and `/sw.js` load over HTTPS.
+2. Open pwabuilder.com, enter the production URL, choose **Package for stores → Android**, and set a package ID (for example `com.yourname.cryptomarketintel`).
+3. Download the package. Keep the generated `signing.keystore` and `signing-key-info.txt` somewhere safe and **never commit them**; losing the key blocks future updates.
+4. Copy the SHA-256 fingerprint from the package's `assetlinks.json` into `ANDROID_SHA256_CERT_FINGERPRINTS` and the package ID into `ANDROID_PACKAGE_NAME` on Vercel, then redeploy (the route is prerendered at build time).
+5. Upload the `.aab` to Google Play Console. With Play App Signing enabled, also add Play's **app signing key** SHA-256 (Play Console → Test and release → App integrity) as a second comma-separated fingerprint and redeploy; otherwise the installed app shows a browser URL bar.
+6. Verify `https://your-domain/.well-known/assetlinks.json` with Google's [Statement List tester](https://developers.google.com/digital-asset-links/tools/generator).
 
 ## AI Usage
 

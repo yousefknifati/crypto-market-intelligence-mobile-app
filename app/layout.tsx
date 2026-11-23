@@ -1,10 +1,13 @@
+import type { Viewport } from "next";
 import { Geist_Mono, Montserrat } from "next/font/google";
 import NextTopLoader from "nextjs-toploader";
 import ReactQueryProvider from "@/providers/ReactQueryProvider";
 import ReduxProvider from "@/providers/ReduxProvider";
 import AppToaster from "@/components/ui/AppToaster";
 import DashboardShell from "@/components/layout/DashboardShell";
+import ServiceWorkerRegistrar from "@/components/pwa/ServiceWorkerRegistrar";
 import { siteMetadata } from "@/lib/seo/siteMetadata";
+import { APP_THEME_COLOR } from "@/lib/pwa/appThemeColor";
 import "./globals.css";
 
 const montserrat = Montserrat({
@@ -19,6 +22,10 @@ const geistMono = Geist_Mono({
 
 export const metadata = siteMetadata;
 
+export const viewport: Viewport = {
+  themeColor: APP_THEME_COLOR,
+};
+
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
@@ -31,6 +38,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
             <NextTopLoader color="#4f46e5" />
             <DashboardShell>{children}</DashboardShell>
             <AppToaster />
+            <ServiceWorkerRegistrar />
           </ReactQueryProvider>
         </ReduxProvider>
       </body>
